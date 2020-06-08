@@ -4,10 +4,18 @@
 \alias{datacamp}
 \title{Retrieve raw R code from a datacamp tutorial}
 \usage{
-datacamp(url)
+datacamp(url, method, padding)
 }
 \arguments{
 \item{url}{Link to datacamp tutorial}
+
+\item{method}{Not all websites are formatted consistently. To overcome this, try a different
+method by setting the method
+parameter to integers 2 and greater to try other available methods}
+
+\item{padding}{Specify what goes between the last character of one code block and the
+first character of the next code block. Default is a two new lines, which appears
+visually as one new line between blocks.}
 }
 \value{
 A character vector of length 1 containing the R code from the target url.
@@ -26,6 +34,20 @@ datacamp("https://www.datacamp.com/community/tutorials/sentiment-analysis-R") \%
   cat
 datacamp("https://www.datacamp.com/community/tutorials/R-nlp-machine-learning") \%>\%
   cat
+
+# If datacamp() doesn't return a sensible result, try another method
+"https://www.datacamp.com/community/tutorials/keras-r-deep-learning" \%>\% datacamp(.) \%>\% cat
+# no result
+
+# Let's try another method
+"https://www.datacamp.com/community/tutorials/keras-r-deep-learning" \%>\%
+   datacamp(method = 2) \%>\%
+   cat # from inspection of output we see this method returns code correctly
+
+# Note that rawr::rawr() has the same capability
+ "https://www.datacamp.com/community/tutorials/keras-r-deep-learning" \%>\%
+   rawr(method = 2) \%>\% cat
+
 }
 
 }

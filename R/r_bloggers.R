@@ -1,11 +1,11 @@
-#' Retrieve raw R code from a blogdown web page
+#' Retrieve raw R code from a kaggle notebook
 #'
 #'
-#' @name blogdown
+#' @name r_bloggers
 #'
-#' @usage blogdown(url, method, padding)
+#' @usage r_bloggers(url, method, padding)
 #'
-#' @param url Link to a blogdown web page
+#' @param url Link to an R-bloggers article
 #' @param method Not all websites are formatted consistently. To overcome this, try a different
 #'     method by setting the method
 #'     parameter to integers 2 and greater to try other available methods
@@ -14,8 +14,6 @@
 #'     visually as one new line between code blocks.
 #'
 #' @return A character vector of length 1 containing the R code from the target url.
-#'     Code from other languages (e.g. javascript, bash, or python) will also be returned if
-#'     present.
 #'
 #' @import dplyr jsonlite xml2
 #' @importFrom rvest html_nodes html_text html_attr
@@ -24,29 +22,24 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' library(dplyr)
-#' blogdown("https://www.jtimm.net/2019/04/14/lexical-change-procrustes/")
+#' paste0("https://www.r-bloggers.com/how-to-create-a-bar-",
+#' "chart-race-in-r-mapping-united-states-city-population-1790-2010/") %>%
+#' r_bloggers
 #'
 #' # Same as above but provided to cat for easy viewing
-#' blogdown("https://www.jtimm.net/2019/04/14/lexical-change-procrustes/")  %>%
-#'   cat
+#' paste0("https://www.r-bloggers.com/how-to-create-a-bar-",
+#' "chart-race-in-r-mapping-united-states-city-population-1790-2010/") %>%
+#' r_bloggers %>% cat
+#' }
 #'
 
 
-blogdown <- function(url, method, padding = "\n\n") {
-  url %>% xml2::read_html(.) %>%
-    html_nodes("code") %>% html_text %>% paste0(collapse=padding)
+
+r_bloggers <- function(url, method, padding = "\n\n") {
+
+  url %>% read_html %>% html_nodes('.highlight') %>% html_text
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
 

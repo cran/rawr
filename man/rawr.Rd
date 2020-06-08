@@ -2,12 +2,25 @@
 % Please edit documentation in R/rawr.R
 \name{rawr}
 \alias{rawr}
-\title{Automatically identify website and retrieve raw R code from it}
+\title{Retrieve raw R code from any github, kaggle, stack overflow, blogdown, or data camp web page}
 \usage{
-rawr(url)
+rawr(url, to_file, file_path, method, padding)
 }
 \arguments{
 \item{url}{Link to an R file on supported website (github, kaggle, datacamp, tidytext)}
+
+\item{to_file}{Boolean to state whether to return output into a new file. Default is false.}
+
+\item{file_path}{Specifies a file path and file name. The default is to
+create a randomly named temp file (see ?tempfile for further information)}
+
+\item{method}{Not all websites are formatted consistently. To overcome this, rawr may have
+more than one method for any site. If what rawr returns is not sensible, try setting method
+parameter to integers 2 and greater to try other available methods}
+
+\item{padding}{Specify what goes between the last character of one code block and the
+first character of the next code block. Default is a two new lines, which appears
+visually as one new line between code blocks.}
 }
 \value{
 A character vector of length 1. rawr attempts to retrieve and return the raw R code it
@@ -15,10 +28,10 @@ A character vector of length 1. rawr attempts to retrieve and return the raw R c
     R code, and in the case of kaggle, all of R (R markdown) and Python code will be returned.
 }
 \description{
-Automatically identify website and retrieve raw R code from it
+Retrieve raw R code from any github, kaggle, stack overflow, blogdown, or data camp web page
 }
 \examples{
-\donttest{
+\dontrun{
 library(dplyr)
 rawr("https://github.com/hadley/vis-eda/blob/master/travel.R")
 
@@ -36,5 +49,25 @@ domains <- c("https://github.com/hadley/vis-eda/blob/master/travel.R",
 "https://www.jtimm.net/2019/04/14/lexical-change-procrustes/")
 
 domains \%>\% sapply(rawr)
+
+ # When default method doesn't return a sensible result, try a different method
+
+ "https://www.datacamp.com/community/tutorials/keras-r-deep-learning" \%>\% rawr \%>\% cat
+ # no result
+
+# Let's try another method
+"https://www.datacamp.com/community/tutorials/keras-r-deep-learning" \%>\%
+   rawr(method = 2) \%>\%
+   cat # from inspection of output we see this method returns code correctly
+
+# Write output to a temp file
+  "https://www.datacamp.com/community/tutorials/R-nlp-machine-learning" \%>\%
+    rawr(to_file = TRUE)
+
+# Or to a new file (provide a file name)
+"https://www.datacamp.com/community/tutorials/R-nlp-machine-learning" \%>\%
+  rawr(to_file = TRUE, file_path = "yourfile.R")
+
 }
+
 }
